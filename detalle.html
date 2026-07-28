@@ -84,29 +84,7 @@
     <!-- TIMELINE -->
     <div class="card" style="margin-bottom:1rem">
       <div class="card-section-title">Historial del expediente</div>
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-dot tl-dot-blue"></div>
-          <div class="tl-body">
-            <div class="tl-action">Solicitud creada</div>
-            <div class="tl-meta">— · 15/05/2026 08:00</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot tl-dot-blue"></div>
-          <div class="tl-body">
-            <div class="tl-action">Asignada a María Eugenia López</div>
-            <div class="tl-meta">Sistema · 15/05/2026 08:05</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot tl-dot-red"></div>
-          <div class="tl-body">
-            <div class="tl-action">SLA vencido sin resolución</div>
-            <div class="tl-meta">Sistema · 22/05/2026 08:00</div>
-          </div>
-        </div>
-      </div>
+      <div class="timeline" id="timeline"></div>
     </div>
 
     <!-- PROFILE GRID -->
@@ -260,6 +238,40 @@ if (nextIdx < total) {
   btnSiguiente.style.opacity = '.4';
 }
 document.getElementById('case-counter').textContent = `${idx + 1} de ${total}`;
+
+// ─── Timeline ─────────────────────────────────────────────────────────────────
+(function() {
+  // Parsear fecha_creacion dd/mm/yyyy → Date
+  const parts = s.fecha_creacion.split('/');
+  const created = new Date(+parts[2], +parts[1]-1, +parts[0], 8, 0);
+
+  function fmtDate(d, offsetMin) {
+    const dt = new Date(d.getTime() + (offsetMin || 0) * 60000);
+    return `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+  }
+
+  function tlItem(dotClass, action, meta) {
+    return `<div class="tl-item">
+      <div class="tl-dot ${dotClass}"></div>
+      <div class="tl-body">
+        <div class="tl-action">${action}</div>
+        <div class="tl-meta">${meta}</div>
+      </div>
+    </div>`;
+  }
+
+  let html = '';
+  html += tlItem('tl-dot-blue', 'Solicitud creada', `Solicitante · ${fmtDate(created)}`);
+  html += tlItem('tl-dot-blue', `Asignada a ${s.agente}`, `Sistema · ${fmtDate(created, 5)}`);
+
+  if (s.sla_vencido) {
+    // SLA vence 7 días después de la creación
+    const slaDate = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000);
+    html += tlItem('tl-dot-red', 'SLA vencido sin resolución', `Sistema · ${fmtDate(slaDate)}`);
+  }
+
+  document.getElementById('timeline').innerHTML = html;
+})();
 
 // ─── RENAPER card ─────────────────────────────────────────────────────────────
 document.getElementById('card-renaper').innerHTML = `
