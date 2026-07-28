@@ -80,4 +80,4 @@ hogares-app/
 
 ---
 
-*Banco de la Nación Argentina · Prototipo UX © 2026*
+*IBM Client Engineering · Prototipo UX © 2026*
