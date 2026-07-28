@@ -818,17 +818,9 @@ tbody tr:hover td { background: #f6f9fc; }
 
 /* ── MÓVIL (≤ 600px) ─────────────────────────────────── */
 @media (max-width: 600px) {
-  /* Navbar: ocultar nav-links, mostrar solo brand */
   .navbar { padding: 0 1rem; }
-  .nav-links {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--blue-dark);
-    border-top: 1px solid rgba(255,255,255,.12);
-    display: flex; justify-content: center; gap: 0;
-    padding: .4rem .5rem calc(.4rem + env(safe-area-inset-bottom));
-    z-index: 45;
-  }
-  .nav-link { font-size: .8rem; padding: .45rem 1.2rem; flex: 1; text-align: center; }
+  .nav-links { gap: 0; }
+  .nav-link { font-size: .75rem; padding: .32rem .65rem; }
 
   /* Hero */
   .hero { padding: 1rem; }
@@ -838,7 +830,7 @@ tbody tr:hover td { background: #f6f9fc; }
   .agent-card { padding: .7rem .85rem; }
 
   /* Main padding */
-  .main { padding: 1rem 1rem 5.5rem; }
+  .main { padding: 1rem 1rem 4rem; }
 
   /* Context bar */
   .context-bar { padding: 0 1rem; }
