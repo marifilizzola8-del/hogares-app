@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>+Hogares — Dashboard</title>
 <link rel="stylesheet" href="shared.css">
-<script src="mock-data.js"></script>
 </head>
 <body>
 
@@ -67,9 +66,9 @@
     </div>
 
     <!-- SLA BANNER -->
-    <div class="sla-banner" id="sla-banner" style="display:none">
+    <div class="sla-banner">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <span id="sla-banner-text"></span>
+      <span><strong>3 solicitudes con SLA vencido</strong> — Revisá y resolví estos casos con urgencia. <a href="solicitudes.html?status=pendiente&sla=vencido" class="sla-link">Ver ahora →</a></span>
     </div>
 
     <!-- KPI GRID -->
@@ -81,8 +80,8 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2b6e8e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           </div>
         </div>
-        <div class="kpi-value" id="kpi-pendientes">—</div>
-        <div class="kpi-trend kpi-trend-up" id="kpi-pendientes-sub"></div>
+        <div class="kpi-value">450</div>
+        <div class="kpi-trend kpi-trend-up">↑ 12% vs semana anterior</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-top">
@@ -91,7 +90,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2b6e8e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
         </div>
-        <div class="kpi-value" id="kpi-revision">—</div>
+        <div class="kpi-value">167</div>
         <div class="kpi-trend kpi-trend-down">↓ 4% esta semana</div>
       </div>
       <div class="kpi-card">
@@ -101,7 +100,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
         </div>
-        <div class="kpi-value" id="kpi-espera" style="color:#b45309">—</div>
+        <div class="kpi-value" style="color:#b45309">133</div>
         <div class="kpi-trend kpi-trend-neutral">→ Sin variación</div>
       </div>
       <div class="kpi-card">
@@ -111,7 +110,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
         </div>
-        <div class="kpi-value" id="kpi-resolucion" style="color:#15803d">—</div>
+        <div class="kpi-value" style="color:#15803d">33.7 h</div>
         <div class="kpi-sub">horas promedio hasta decisión</div>
       </div>
       <div class="kpi-card kpi-card--danger">
@@ -121,24 +120,73 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
           </div>
         </div>
-        <div class="kpi-value" id="kpi-vencidas">—</div>
+        <div class="kpi-value">3</div>
         <div class="kpi-trend kpi-trend-up">↑ Atención urgente</div>
       </div>
     </div>
 
     <!-- DASH GRID -->
     <div class="dash-grid">
+      <!-- Distribución estado -->
       <div class="dash-card">
         <div class="dash-card-title">Distribución por estado</div>
-        <div id="dist-estado"></div>
+        <div class="dist-item">
+          <div class="dist-top"><span class="dist-lbl">Pendiente</span><span class="dist-val">450</span></div>
+          <div class="dist-bar"><span class="dist-fill dist-fill-state" style="width:100%"></span></div>
+        </div>
+        <div class="dist-item">
+          <div class="dist-top"><span class="dist-lbl">En revisión</span><span class="dist-val">167</span></div>
+          <div class="dist-bar"><span class="dist-fill dist-fill-state" style="width:37%"></span></div>
+        </div>
+        <div class="dist-item">
+          <div class="dist-top"><span class="dist-lbl">En espera</span><span class="dist-val">133</span></div>
+          <div class="dist-bar"><span class="dist-fill dist-fill-state" style="width:30%"></span></div>
+        </div>
       </div>
+
+      <!-- Distribución prioridad -->
       <div class="dash-card">
         <div class="dash-card-title">Distribución por prioridad</div>
-        <div id="dist-prioridad"></div>
+        <div class="dist-item">
+          <div class="dist-top"><span class="dist-lbl">Alta</span><span class="dist-val">181</span></div>
+          <div class="dist-bar"><span class="dist-fill dist-fill-prio" style="width:42%"></span></div>
+        </div>
+        <div class="dist-item">
+          <div class="dist-top"><span class="dist-lbl">Media</span><span class="dist-val">435</span></div>
+          <div class="dist-bar"><span class="dist-fill dist-fill-prio" style="width:100%"></span></div>
+        </div>
+        <div class="dist-item">
+          <div class="dist-top"><span class="dist-lbl">Baja</span><span class="dist-val">218</span></div>
+          <div class="dist-bar"><span class="dist-fill dist-fill-prio" style="width:50%"></span></div>
+        </div>
+        <div style="margin-top:.85rem">
+          <span class="chip chip-alta" style="font-size:.7rem">ALTA: 181 solicitudes</span>
+        </div>
       </div>
+
+      <!-- Top 5 -->
       <div class="dash-card">
         <div class="dash-card-title">Top 5 — Alta prioridad pendientes</div>
-        <div id="top5-list"></div>
+        <a href="detalle.html?id=REQ-00001" class="top-item">
+          <div class="top-item-main"><span class="top-item-name">Carlos Alberto Méndez</span><span class="top-item-meta">REQ-00001</span></div>
+          <div class="top-item-right"><span class="chip chip-alta">Alta</span><div class="score-mini"><span class="score-val">940</span><div class="score-bar"><span class="score-fill" style="width:94%"></span></div></div></div>
+        </a>
+        <a href="detalle.html?id=REQ-00002" class="top-item">
+          <div class="top-item-main"><span class="top-item-name">Luciana Paola Ferreyra</span><span class="top-item-meta">REQ-00002</span></div>
+          <div class="top-item-right"><span class="chip chip-alta">Alta</span><div class="score-mini"><span class="score-val">910</span><div class="score-bar"><span class="score-fill" style="width:91%"></span></div></div></div>
+        </a>
+        <a href="detalle.html?id=REQ-00003" class="top-item">
+          <div class="top-item-main"><span class="top-item-name">Roberto Carlos Sánchez</span><span class="top-item-meta">REQ-00003</span></div>
+          <div class="top-item-right"><span class="chip chip-alta">Alta</span><div class="score-mini"><span class="score-val">720</span><div class="score-bar"><span class="score-fill" style="width:72%;background:var(--amber)"></span></div></div></div>
+        </a>
+        <a href="detalle.html?id=REQ-00004" class="top-item">
+          <div class="top-item-main"><span class="top-item-name">Valentina Inés Torres</span><span class="top-item-meta">REQ-00004</span></div>
+          <div class="top-item-right"><span class="chip chip-alta">Alta</span><div class="score-mini"><span class="score-val">965</span><div class="score-bar"><span class="score-fill" style="width:96.5%"></span></div></div></div>
+        </a>
+        <a href="detalle.html?id=REQ-00005" class="top-item">
+          <div class="top-item-main"><span class="top-item-name">Martín Ezequiel Ibáñez</span><span class="top-item-meta">REQ-00005</span></div>
+          <div class="top-item-right"><span class="chip chip-alta">Alta</span><div class="score-mini"><span class="score-val">955</span><div class="score-bar"><span class="score-fill" style="width:95.5%"></span></div></div></div>
+        </a>
         <div style="margin-top:.9rem;text-align:center">
           <a href="solicitudes.html" class="btn-ghost" style="font-size:.8rem">Ver toda la cola →</a>
         </div>
@@ -194,91 +242,29 @@ const AGENTS_INFO = {
   'Julián Andrés Pérez': { initials: 'JP', sucursal: 'Rosario Centro', email: 'julian.perez@bna.com.ar' },
 };
 
-function renderDashboard(agente) {
-  const lista = SOLICITUDES.filter(s => s.agente === agente);
-  const total  = lista.length;
-  const pendientes = Math.round(total * 0.60);
-  const revision   = Math.round(total * 0.25);
-  const espera     = total - pendientes - revision;
-  const vencidas   = lista.filter(s => s.sla_vencido).length;
-  const avgDias    = total ? lista.reduce((acc, s) => acc + parseInt(s.tiempo_cola), 0) / total : 0;
-  const avgHoras   = (avgDias * 24).toFixed(1);
-
-  // KPIs
-  document.getElementById('kpi-pendientes').textContent = pendientes;
-  document.getElementById('kpi-pendientes-sub').textContent = `↑ ${total} solicitudes en cartera`;
-  document.getElementById('kpi-revision').textContent = revision;
-  document.getElementById('kpi-espera').textContent = espera;
-  document.getElementById('kpi-resolucion').textContent = avgHoras + ' h';
-  document.getElementById('kpi-vencidas').textContent = vencidas;
-
-  // SLA banner
-  const banner = document.getElementById('sla-banner');
-  if (vencidas > 0) {
-    banner.style.display = '';
-    document.getElementById('sla-banner-text').innerHTML =
-      `<strong>${vencidas} solicitud${vencidas > 1 ? 'es' : ''} con SLA vencido</strong> — Revisá y resolví ${vencidas > 1 ? 'estos casos' : 'este caso'} con urgencia. <a href="solicitudes.html" class="sla-link">Ver ahora →</a>`;
-  } else {
-    banner.style.display = 'none';
-  }
-
-  // Dist estado
-  const maxE = Math.max(pendientes, revision, espera) || 1;
-  document.getElementById('dist-estado').innerHTML =
-    [['Pendiente', pendientes], ['En revisión', revision], ['En espera', espera]]
-    .map(([lbl, v]) => `<div class="dist-item">
-      <div class="dist-top"><span class="dist-lbl">${lbl}</span><span class="dist-val">${v}</span></div>
-      <div class="dist-bar"><span class="dist-fill dist-fill-state" style="width:${Math.round(v/maxE*100)}%"></span></div>
-    </div>`).join('');
-
-  // Dist prioridad
-  const alta  = lista.filter(s => s.prioridad === 'alta').length;
-  const media = lista.filter(s => s.prioridad === 'media').length;
-  const baja  = lista.filter(s => s.prioridad === 'baja').length;
-  const maxP  = Math.max(alta, media, baja) || 1;
-  document.getElementById('dist-prioridad').innerHTML =
-    [['Alta', alta], ['Media', media], ['Baja', baja]]
-    .map(([lbl, v]) => `<div class="dist-item">
-      <div class="dist-top"><span class="dist-lbl">${lbl}</span><span class="dist-val">${v}</span></div>
-      <div class="dist-bar"><span class="dist-fill dist-fill-prio" style="width:${Math.round(v/maxP*100)}%"></span></div>
-    </div>`).join('') +
-    `<div style="margin-top:.85rem"><span class="chip chip-alta" style="font-size:.7rem">ALTA: ${alta} solicitudes</span></div>`;
-
-  // Top 5
-  const top5 = lista.filter(s => s.prioridad === 'alta').sort((a, b) => b.bcra.score - a.bcra.score).slice(0, 5);
-  document.getElementById('top5-list').innerHTML = top5.length
-    ? top5.map(s => `<a href="detalle.html?id=${s.id}" class="top-item">
-        <div class="top-item-main">
-          <span class="top-item-name">${s.renaper.nombre}</span>
-          <span class="top-item-meta">${s.id}</span>
-        </div>
-        <div class="top-item-right">
-          <span class="chip chip-alta">Alta</span>
-          <div class="score-mini">
-            <span class="score-val">${s.bcra.score}</span>
-            <div class="score-bar"><span class="score-fill" style="width:${s.bcra.score/10}%;background:${s.bcra.score>=800?'var(--blue)':'var(--amber)'}"></span></div>
-          </div>
-        </div>
-      </a>`).join('')
-    : `<p style="font-size:.82rem;color:var(--muted);padding:.5rem 0">Sin solicitudes de alta prioridad.</p>`;
-}
-
 function applyAgent(nombre) {
   localStorage.setItem('activeAgent', nombre);
   const info = AGENTS_INFO[nombre];
+  // Avatar: solo las iniciales sin el dot (mantener el dot dentro)
   const dot = document.querySelector('.agent-online');
   document.getElementById('agent-avatar').innerHTML = info.initials;
   document.getElementById('agent-avatar').appendChild(dot);
   document.getElementById('agent-meta').textContent = `${info.sucursal} · ${info.email}`;
-  renderDashboard(nombre);
 }
 
 const sel = document.getElementById('agent-select');
+// Restaurar selección guardada
 const saved = localStorage.getItem('activeAgent');
-if (saved && AGENTS_INFO[saved]) sel.value = saved;
+if (saved && AGENTS_INFO[saved]) {
+  sel.value = saved;
+}
 applyAgent(sel.value);
 
-sel.addEventListener('change', function() { applyAgent(this.value); });
+sel.addEventListener('change', function() {
+  applyAgent(this.value);
+  // Recargar para reflejar el cambio en los KPIs del dashboard
+  window.location.reload();
+});
 </script>
 </body>
 </html>
