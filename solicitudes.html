@@ -134,10 +134,10 @@
         </table>
       </div>
       <div class="pagination">
-        <span class="pagination-info">Página <strong>1</strong> de 45 · <strong>450 solicitudes</strong></span>
+        <span class="pagination-info" id="pagination-info"></span>
         <div class="pagination-actions">
-          <button class="btn-ghost" disabled style="opacity:.4">← Anterior</button>
-          <button class="btn-ghost">Siguiente →</button>
+          <button class="btn-ghost" id="btn-prev" onclick="goPage(currentPage-1)">← Anterior</button>
+          <button class="btn-ghost" id="btn-next" onclick="goPage(currentPage+1)">Siguiente →</button>
         </div>
       </div>
     </div>
@@ -153,20 +153,24 @@
 </footer>
 
 <script>
-  // Priority badge class mapping
+  const PAGE_SIZE = 10;
+  let currentPage = 1;
+  let currentList = SOLICITUDES;
+
   function prioridadClass(p) {
     return { alta: 'chip-alta', media: 'chip-media', baja: 'chip-baja' }[p] || 'chip-media';
   }
 
-  // AI decision chip class
   function iaClass(d) {
     return { 'APROBAR': 'chip-aprobar', 'RECHAZAR': 'chip-rechazar', 'REVISAR': 'chip-revisar' }[d] || 'chip-media';
   }
 
-  function renderTabla(lista) {
+  function renderTabla(lista, page) {
     const tbody = document.getElementById('tabla-body');
     tbody.innerHTML = '';
-    lista.forEach((s, i) => {
+    const start = (page - 1) * PAGE_SIZE;
+    const slice = lista.slice(start, start + PAGE_SIZE);
+    slice.forEach(s => {
       const slaHtml = s.sla_vencido
         ? `<span class="chip chip-vencida" style="font-size:.7rem;padding:.1rem .45rem">SLA vencido</span>`
         : '';
@@ -185,26 +189,46 @@
         <td style="color:var(--muted);font-size:.83rem">${s.tiempo_cola}</td>
         <td><span class="chip ${prioridadClass(s.prioridad)}">${s.prioridad.charAt(0).toUpperCase() + s.prioridad.slice(1)}</span></td>
         <td><span class="chip ${iaClass(s.ai_decision)}">${s.ai_decision}</span></td>
-        <td>
-          <a href="detalle.html?id=${s.id}" class="btn-abrir">Abrir →</a>
-        </td>`;
+        <td><a href="detalle.html?id=${s.id}" class="btn-abrir">Abrir →</a></td>`;
       tbody.appendChild(row);
     });
   }
 
-  // Live search filter
+  function updatePagination(lista, page) {
+    const totalPages = Math.max(1, Math.ceil(lista.length / PAGE_SIZE));
+    const start = (page - 1) * PAGE_SIZE + 1;
+    const end   = Math.min(page * PAGE_SIZE, lista.length);
+    document.getElementById('pagination-info').innerHTML =
+      `Página <strong>${page}</strong> de <strong>${totalPages}</strong> · mostrando <strong>${start}–${end}</strong> de <strong>${lista.length}</strong>`;
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    btnPrev.disabled = page <= 1;
+    btnPrev.style.opacity = page <= 1 ? '.4' : '';
+    btnNext.disabled = page >= totalPages;
+    btnNext.style.opacity = page >= totalPages ? '.4' : '';
+  }
+
+  function goPage(page) {
+    const totalPages = Math.max(1, Math.ceil(currentList.length / PAGE_SIZE));
+    currentPage = Math.max(1, Math.min(page, totalPages));
+    renderTabla(currentList, currentPage);
+    updatePagination(currentList, currentPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Live search — reset to page 1 on each keystroke
   document.getElementById('q-search').addEventListener('input', function() {
     const q = this.value.toLowerCase();
-    const filtered = SOLICITUDES.filter(s =>
+    currentList = SOLICITUDES.filter(s =>
       s.id.toLowerCase().includes(q) ||
       s.renaper.nombre.toLowerCase().includes(q) ||
       s.renaper.dni.toLowerCase().includes(q)
     );
-    renderTabla(filtered);
+    goPage(1);
   });
 
   // Initial render
-  renderTabla(SOLICITUDES);
+  goPage(1);
 </script>
 </body>
 </html>

@@ -754,6 +754,152 @@ const SOLICITUDES = [
   },
 ];
 
+// ─── Generador de solicitudes adicionales (REQ-00011 … REQ-00450) ─────────────
+;(function() {
+  const _nombres = [
+    'Ana Martínez','Bruno Díaz','Carla Gómez','Diego Herrera','Elena Ruiz',
+    'Facundo López','Gisela Torres','Hernán Romero','Iris Molina','Javier Acosta',
+    'Karen Reyes','Leandro Castro','Marta Flores','Nicolás Silva','Olivia Ramos',
+    'Pablo Suárez','Quirina Blanco','Ramón Jiménez','Sandra Morales','Tomás Vargas',
+    'Ursula Guzmán','Víctor Mendoza','Wendy Peralta','Xavier Cabrera','Yanina Sosa',
+    'Zaira Núñez','Agustín Ríos','Belén Paredes','César Vega','Diana Lara',
+    'Eduardo Ponce','Fernanda Ibarra','Gonzalo Peña','Helena Fuentes','Ignacio Cano',
+    'Jimena Delgado','Kevin Rojas','Laura Estrada','Manuel Guerrero','Natalia Sandoval',
+    'Omar Contreras','Patricia Montes','Quintín Aguilar','Rosa Espinoza','Sergio Medina',
+    'Teresa Navarro','Ulises Ortega','Valentín Carrillo','Wanda Benítez','Ximena Palacios'
+  ];
+  const _empleadores = [
+    'Ministerio de Educación','YPF S.A.','Arcor S.A.I.C.','Banco Galicia',
+    'Telecom Argentina','OSDE','Claro Argentina','Mercado Libre S.R.L.',
+    'Hospital Garrahan','Universidad de Buenos Aires','ANSES','Coto S.A.',
+    'Globant S.A.','Carrefour Argentina','La Caja ART','Pampa Energía',
+    'Correo Argentino','Aerolíneas Argentinas','PAMI','Supermercados DIA'
+  ];
+  const _sucursales = [
+    'Buenos Aires - Microcentro - Florida 336',
+    'Buenos Aires - Palermo - Santa Fe 3251',
+    'Buenos Aires - Belgrano - Cabildo 1670',
+    'Santa Fe - Rosario - Córdoba 1546',
+    'Córdoba - Nueva Córdoba - Av. H. Yrigoyen 360',
+    'Mendoza - Mendoza Capital - San Martín 800',
+    'Tucumán - San Miguel - Maipú 450',
+    'Salta - Capital - España 820',
+    'Neuquén - Capital - Av. Argentina 1250',
+    'Mar del Plata - Güemes 2960'
+  ];
+  const _propiedades = [
+    { dir:'Av. Corrientes 3840, CABA',         tipo:'Departamento', sup:'52 m²',  precio:'$ 145.000.000', cuota:'$ 435.000' },
+    { dir:'Gurruchaga 1456, CABA',             tipo:'Departamento', sup:'68 m²',  precio:'$ 185.000.000', cuota:'$ 555.000' },
+    { dir:'San Lorenzo 892, Rosario',          tipo:'Departamento', sup:'48 m²',  precio:'$ 98.000.000',  cuota:'$ 294.000' },
+    { dir:'Colón 234, Córdoba Capital',        tipo:'Departamento', sup:'55 m²',  precio:'$ 112.000.000', cuota:'$ 336.000' },
+    { dir:'Arístides Villanueva 540, Mendoza', tipo:'Casa',         sup:'90 m²',  precio:'$ 165.000.000', cuota:'$ 495.000' },
+    { dir:'San Juan 870, Rosario',             tipo:'PH',           sup:'75 m²',  precio:'$ 128.000.000', cuota:'$ 384.000' },
+    { dir:'Laprida 1200, Córdoba',             tipo:'Departamento', sup:'44 m²',  precio:'$ 89.000.000',  cuota:'$ 267.000' },
+    { dir:'Belgrano 980, Mendoza',             tipo:'Casa',         sup:'110 m²', precio:'$ 210.000.000', cuota:'$ 630.000' },
+  ];
+  const _agentes = [
+    'María Eugenia López','Julián Andrés Pérez','Carolina Beatriz Ruiz',
+    'Federico Martín Sosa','Ana Paula Gómez','Santiago Nicolás Díaz'
+  ];
+  const _categorias = ['Relación de dependencia','Monotributista','Autónomo'];
+  const _decisiones = ['APROBAR','REVISAR','RECHAZAR'];
+  const _prioridades = ['alta','media','baja'];
+
+  // Simple deterministic pseudo-random based on seed
+  function rnd(seed, max) {
+    const x = Math.sin(seed + 1) * 10000;
+    return Math.floor((x - Math.floor(x)) * max);
+  }
+
+  for (let i = 11; i <= 450; i++) {
+    const s = i * 7;
+    const nombre   = _nombres[rnd(s, _nombres.length)];
+    const emp      = _empleadores[rnd(s+1, _empleadores.length)];
+    const suc      = _sucursales[rnd(s+2, _sucursales.length)];
+    const prop     = _propiedades[rnd(s+3, _propiedades.length)];
+    const agente   = _agentes[rnd(s+4, _agentes.length)];
+    const cat      = _categorias[rnd(s+5, _categorias.length)];
+    const score    = 500 + rnd(s+6, 500);           // 500–999
+    const neto     = 700000 + rnd(s+7, 1200000);    // $700k–$1.9M
+    const cuotaNum = parseInt(prop.cuota.replace(/[^0-9]/g,''));
+    const ratio    = ((cuotaNum / neto) * 100).toFixed(1);
+    const elegible = parseFloat(ratio) <= 35;
+    const aiDecision = score >= 900 ? 'APROBAR' : score < 620 ? 'RECHAZAR' : 'REVISAR';
+    const aiColor    = { APROBAR:'verde', REVISAR:'amarillo', RECHAZAR:'rojo' }[aiDecision];
+    const prio       = rnd(s+8, 3);  // 0=alta 1=media 2=baja
+    const diasCola   = 5 + rnd(s+9, 80);
+    const slaVencido = diasCola > 60 && aiDecision !== 'APROBAR';
+
+    // fecha_creacion: días atrás desde 24/07/2026
+    const base = new Date(2026, 6, 24);
+    base.setDate(base.getDate() - diasCola);
+    const fecha = `${String(base.getDate()).padStart(2,'0')}/${String(base.getMonth()+1).padStart(2,'0')}/${base.getFullYear()}`;
+
+    const dni = `${20000000 + rnd(s+10, 20000000)}`;
+    const dniFmt = dni.replace(/(\d{2})(\d{3})(\d{3})/,'$1.$2.$3');
+
+    SOLICITUDES.push({
+      id: `REQ-${String(i).padStart(5,'0')}`,
+      fecha_creacion: fecha,
+      sla_vencido: slaVencido,
+      tiempo_cola: `hace ${diasCola} d ${rnd(s+11,24)} h`,
+      agente,
+      prioridad: _prioridades[prio],
+      ai_decision: aiDecision,
+      ai_color: aiColor,
+      renaper: {
+        nombre,
+        dni: dniFmt,
+        cuil: `20-${dni}-${rnd(s+12,9)}`,
+        nacimiento: `${String(1+rnd(s+13,28)).padStart(2,'0')}/${String(1+rnd(s+14,12)).padStart(2,'0')}/${1970+rnd(s+15,35)}`,
+        domicilio: prop.dir,
+        telefono: `+54 11 ${4000+rnd(s+16,5999)}-${1000+rnd(s+17,8999)}`,
+      },
+      bcra: {
+        situacion: score >= 800 ? '1 — Normal' : score >= 650 ? '2 — Riesgo bajo' : '3 — Riesgo medio',
+        score,
+        deudas: rnd(s+18,3) === 0 ? 'Sin deudas' : `$ ${(rnd(s+19,500)*1000).toLocaleString('es-AR')}`,
+        negativos: score < 650,
+      },
+      afip: {
+        categoria: cat,
+        empleador: emp,
+        estado: 'Activo',
+        inscripcion: `${String(1+rnd(s+20,28)).padStart(2,'0')}/${String(1+rnd(s+21,12)).padStart(2,'0')}/${2005+rnd(s+22,18)}`,
+      },
+      propiedad: {
+        direccion: prop.dir,
+        tipo: prop.tipo,
+        superficie: prop.sup,
+        precio: prop.precio,
+        cuota: prop.cuota,
+        ratio: ratio + '%',
+        elegible,
+      },
+      credito: {
+        destino: 'Adquisición de vivienda única',
+        valor: prop.precio,
+        sucursal: suc,
+      },
+      payslips: [
+        { periodo: 'Abril 2026', bruto: `$ ${Math.round(neto/0.86).toLocaleString('es-AR')}`, neto: `$ ${neto.toLocaleString('es-AR')}` },
+        { periodo: 'Mayo 2026',  bruto: `$ ${Math.round(neto/0.86).toLocaleString('es-AR')}`, neto: `$ ${neto.toLocaleString('es-AR')}` },
+        { periodo: 'Junio 2026', bruto: `$ ${Math.round(neto*1.03/0.86).toLocaleString('es-AR')}`, neto: `$ ${Math.round(neto*1.03).toLocaleString('es-AR')}` },
+      ],
+      analisis: {
+        estado: aiColor,
+        decision: { APROBAR:'Sugerencia: Aprobar', REVISAR:'Sugerencia: Revisar', RECHAZAR:'Sugerencia: Rechazar' }[aiDecision],
+        resumen: `Perfil evaluado automáticamente. Score BCRA ${score} pts. Ratio cuota/ingreso ${ratio}%. Categoría: ${cat}.`,
+        razones: [`Score BCRA de ${score} pts`, `Ratio cuota/neto del ${ratio}%`, `Categoría: ${cat}`, `Empleador: ${emp}`],
+        condiciones: elegible ? ['Propiedad apta para hipoteca'] : ['Ratio cuota/ingreso supera el máximo permitido del 35%'],
+        haberes_tendencia: '↑ Creciente',
+        haberes_promedio: `$ ${neto.toLocaleString('es-AR')}`,
+        haberes_consistencia: 'OK',
+      },
+    });
+  }
+})();
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getSolicitudById(id) {
