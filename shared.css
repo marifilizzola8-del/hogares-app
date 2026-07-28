@@ -748,3 +748,174 @@ tbody tr:hover td { background: #f6f9fc; }
 }
 .footer-brand { font-size: .88rem; font-weight: 800; color: var(--blue); }
 .footer-legal { font-size: .75rem; color: var(--muted); }
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — breakpoints
+   768px  → tablet (md)
+   480px  → móvil  (sm)
+   ══════════════════════════════════════════════════════ */
+
+/* ── TABLET (≤ 900px) ────────────────────────────────── */
+@media (max-width: 900px) {
+  /* Navbar */
+  .navbar { padding: 0 1.1rem; }
+  .brand-name { font-size: .95rem; }
+  .nav-links { gap: 0; }
+  .nav-link { padding: .35rem .7rem; font-size: .8rem; }
+
+  /* Hero */
+  .hero { padding: 1.1rem 1.1rem; }
+  .hero-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .agent-card { min-width: 0; width: 100%; max-width: 100%; }
+  .hero-headline { font-size: 1.25rem; }
+
+  /* Main padding */
+  .main { padding: 1.25rem 1.1rem 4rem; }
+
+  /* KPI grid: 3 columnas */
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Dash grid: 1 columna */
+  .dash-grid { grid-template-columns: 1fr; }
+
+  /* Profile grid: 2 columnas */
+  .profile-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Crédito grid: 2 columnas */
+  .credito-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Filters: 3 columnas */
+  .filters-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  /* Data grid (análisis): 1 columna */
+  .data-grid { grid-template-columns: 1fr; }
+
+  /* Context bar: ocultar separadores largos */
+  .context-bar { padding: 0 1.1rem; }
+
+  /* Section header */
+  .section-hdr { flex-direction: column; gap: .5rem; }
+
+  /* Page header */
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .mini-kpis { width: 100%; }
+
+  /* Detalle header */
+  .detalle-header { flex-direction: column; align-items: flex-start; gap: .85rem; }
+  .btn-analizar { width: 100%; justify-content: center; }
+
+  /* CTA banner */
+  .cta-analizar-banner { flex-direction: column; gap: .85rem; }
+  .cta-analizar-banner .btn-analizar { width: 100%; justify-content: center; }
+
+  /* Rec panel */
+  .rec-panel { flex-direction: column; gap: 1rem; }
+  .semaforo-col { flex-direction: row; justify-content: flex-start; }
+
+  /* Footer */
+  .footer-inner { flex-direction: column; align-items: flex-start; gap: .4rem; }
+}
+
+/* ── MÓVIL (≤ 600px) ─────────────────────────────────── */
+@media (max-width: 600px) {
+  /* Navbar: ocultar nav-links, mostrar solo brand */
+  .navbar { padding: 0 1rem; }
+  .nav-links {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--blue-dark);
+    border-top: 1px solid rgba(255,255,255,.12);
+    display: flex; justify-content: center; gap: 0;
+    padding: .4rem .5rem calc(.4rem + env(safe-area-inset-bottom));
+    z-index: 45;
+  }
+  .nav-link { font-size: .8rem; padding: .45rem 1.2rem; flex: 1; text-align: center; }
+
+  /* Hero */
+  .hero { padding: 1rem; }
+  .hero-headline { font-size: 1.1rem; }
+  .hero-tagline { font-size: .78rem; }
+  .hero-eyebrow { font-size: .6rem; }
+  .agent-card { padding: .7rem .85rem; }
+
+  /* Main padding */
+  .main { padding: 1rem 1rem 5.5rem; }
+
+  /* Context bar */
+  .context-bar { padding: 0 1rem; }
+  .context-bar-inner { gap: .5rem; }
+  .bc-step svg.bc-step-icon { display: none; }
+  /* Ocultar chips de context bar en pantallas muy chicas */
+  .context-bar-right { display: none; }
+
+  /* KPI grid: 2 columnas */
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+  .kpi-value { font-size: 1.5rem; }
+
+  /* Dash grid */
+  .dash-grid { gap: .7rem; }
+
+  /* Profile grid: 1 columna */
+  .profile-grid { grid-template-columns: 1fr; }
+
+  /* Crédito grid: 1 columna */
+  .credito-grid { grid-template-columns: 1fr; }
+
+  /* Filters: 2 columnas */
+  .filters-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+
+  /* Table — scroll horizontal */
+  .table-wrap { -webkit-overflow-scrolling: touch; }
+
+  /* Pagination */
+  .pagination { flex-direction: column; align-items: flex-start; gap: .65rem; }
+
+  /* Section header */
+  .section-title { font-size: .95rem; }
+  .section-desc { font-size: .75rem; }
+
+  /* Buttons */
+  .btn-ghost { font-size: .73rem; padding: .38rem .75rem; }
+
+  /* SLA banner */
+  .sla-banner { font-size: .78rem; padding: .6rem .85rem; }
+
+  /* Detalle */
+  .detalle-name { font-size: 1.2rem; }
+  .detalle-nav { gap: .4rem; }
+  .case-nav { flex-wrap: wrap; }
+
+  /* Decision panel */
+  .decision-btns { flex-direction: column; gap: .65rem; }
+  .btn-decision { width: 100%; justify-content: center; font-size: .87rem; padding: .65rem 1rem; }
+
+  /* Mini KPIs */
+  .mini-kpis { flex-wrap: wrap; }
+  .mini-kpi { padding: .6rem 1rem; flex: 1; min-width: 80px; }
+  .mini-kpi-divider { display: none; }
+
+  /* Queue toolbar */
+  .queue-toolbar { flex-direction: column; align-items: stretch; gap: .6rem; }
+  .search-wrap { max-width: 100%; }
+  .toolbar-right { justify-content: flex-end; }
+
+  /* Chart: ancho reducido */
+  .chart-area { gap: .25rem; }
+  .bar { width: 8px; }
+  .chart-lbl { font-size: .6rem; }
+
+  /* Modal */
+  .modal-card { padding: 1.5rem 1.25rem 1.25rem; }
+
+  /* CTA banner */
+  .cta-analizar-banner { padding: 1rem 1.1rem; }
+  .cta-analizar-banner strong { font-size: .9rem; }
+  .cta-analizar-banner p { font-size: .78rem; }
+
+  /* Haberes stats */
+  .haberes-stats { gap: 1rem; }
+  .hs-val { font-size: .84rem; }
+
+  /* Footer */
+  .footer { padding: .85rem 1rem; }
+  .footer-legal { font-size: .7rem; }
+}
