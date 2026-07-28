@@ -39,14 +39,14 @@
       <p class="hero-tagline">Dashboard para agentes del Banco Nación con cola priorizada, métricas operativas y análisis asistido por IA.</p>
     </div>
     <div class="agent-card">
-      <div class="agent-avatar" id="agent-avatar">ML<div class="agent-online"></div></div>
+      <div class="agent-avatar">ML<div class="agent-online"></div></div>
       <div class="agent-info">
         <div class="agent-label">Agente activo</div>
-        <select class="agent-select" id="agent-select">
-          <option value="María Eugenia López">María Eugenia López — Casa Central</option>
-          <option value="Julián Andrés Pérez">Julián Andrés Pérez — Rosario Centro</option>
+        <select class="agent-select">
+          <option>María Eugenia López — Casa Central</option>
+          <option>Juan Rodríguez — Sucursal Palermo</option>
         </select>
-        <div class="agent-meta" id="agent-meta"></div>
+        <div class="agent-meta">Casa Central · maria.lopez@bna.com.ar</div>
       </div>
     </div>
   </div>
@@ -235,36 +235,5 @@
     <span class="footer-legal">Banco de la Nación Argentina © 2026 — Sistema de Asistencia a la Evaluación Crediticia</span>
   </div>
 </footer>
-
-<script>
-const AGENTS_INFO = {
-  'María Eugenia López': { initials: 'ML', sucursal: 'Casa Central', email: 'maria.lopez@bna.com.ar' },
-  'Julián Andrés Pérez': { initials: 'JP', sucursal: 'Rosario Centro', email: 'julian.perez@bna.com.ar' },
-};
-
-function applyAgent(nombre) {
-  localStorage.setItem('activeAgent', nombre);
-  const info = AGENTS_INFO[nombre];
-  // Avatar: solo las iniciales sin el dot (mantener el dot dentro)
-  const dot = document.querySelector('.agent-online');
-  document.getElementById('agent-avatar').innerHTML = info.initials;
-  document.getElementById('agent-avatar').appendChild(dot);
-  document.getElementById('agent-meta').textContent = `${info.sucursal} · ${info.email}`;
-}
-
-const sel = document.getElementById('agent-select');
-// Restaurar selección guardada
-const saved = localStorage.getItem('activeAgent');
-if (saved && AGENTS_INFO[saved]) {
-  sel.value = saved;
-}
-applyAgent(sel.value);
-
-sel.addEventListener('change', function() {
-  applyAgent(this.value);
-  // Recargar para reflejar el cambio en los KPIs del dashboard
-  window.location.reload();
-});
-</script>
 </body>
 </html>

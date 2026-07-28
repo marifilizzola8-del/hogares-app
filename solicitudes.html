@@ -215,14 +215,10 @@
     updatePagination(currentList, currentPage);
   }
 
-  // Filtrar por agente activo (guardado en localStorage)
-  const activeAgent = localStorage.getItem('activeAgent') || 'María Eugenia López';
-  const solicitudesAgente = SOLICITUDES.filter(s => s.agente === activeAgent);
-
   // Live search — reset to page 1 on each keystroke
   document.getElementById('q-search').addEventListener('input', function() {
     const q = this.value.toLowerCase();
-    currentList = solicitudesAgente.filter(s =>
+    currentList = SOLICITUDES.filter(s =>
       s.id.toLowerCase().includes(q) ||
       s.renaper.nombre.toLowerCase().includes(q) ||
       s.renaper.dni.toLowerCase().includes(q)
@@ -230,8 +226,7 @@
     goPage(1);
   });
 
-  // Initial render con las solicitudes del agente activo
-  currentList = solicitudesAgente;
+  // Initial render
   goPage(1);
 </script>
 </body>
