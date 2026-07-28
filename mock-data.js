@@ -902,6 +902,13 @@ const SOLICITUDES = [
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// Estado derivado de ai_decision — misma lógica en dashboard y tabla
+function estadoSolicitud(s) {
+  if (s.ai_decision === 'APROBAR') return 'Pendiente';
+  if (s.ai_decision === 'REVISAR') return 'En revisión';
+  return 'En espera';
+}
+
 function getSolicitudById(id) {
   return SOLICITUDES.find(s => s.id === id) || null;
 }

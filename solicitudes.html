@@ -66,26 +66,31 @@
       <!-- Mini KPIs contextuales -->
       <div class="mini-kpis">
         <div class="mini-kpi">
+          <span class="mini-kpi-label">Total</span>
+          <span class="mini-kpi-val" id="mkpi-total" style="color:#1f5870">—</span>
+        </div>
+        <div class="mini-kpi-divider"></div>
+        <div class="mini-kpi">
           <span class="mini-kpi-label">Pendientes</span>
-          <span class="mini-kpi-val" style="color:#1f5870">450</span>
+          <span class="mini-kpi-val" id="mkpi-pendientes" style="color:#1f5870">—</span>
+        </div>
+        <div class="mini-kpi-divider"></div>
+        <div class="mini-kpi">
+          <span class="mini-kpi-label">En revisión</span>
+          <span class="mini-kpi-val" id="mkpi-revision" style="color:#92400e">—</span>
         </div>
         <div class="mini-kpi-divider"></div>
         <div class="mini-kpi">
           <span class="mini-kpi-label">Vencidas</span>
-          <span class="mini-kpi-val" style="color:#b91c1c">3</span>
-        </div>
-        <div class="mini-kpi-divider"></div>
-        <div class="mini-kpi">
-          <span class="mini-kpi-label">Página actual</span>
-          <span class="mini-kpi-val" style="color:#1f5870">1 / 45</span>
+          <span class="mini-kpi-val" id="mkpi-vencidas" style="color:#b91c1c">—</span>
         </div>
       </div>
     </div>
 
     <!-- SLA BANNER -->
-    <div class="sla-banner" style="margin-bottom:1rem">
+    <div class="sla-banner" id="sla-banner" style="margin-bottom:1rem;display:none">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <span><strong>3 solicitudes con SLA vencido</strong> — Las primeras 3 filas requieren atención urgente.</span>
+      <span id="sla-banner-text"></span>
     </div>
 
     <!-- TOOLBAR -->
@@ -123,6 +128,7 @@
               <th class="sorted">Solicitud ↑</th>
               <th>Cliente</th>
               <th>Tiempo en cola</th>
+              <th>Estado</th>
               <th>Prioridad</th>
               <th>Sugerencia IA</th>
               <th>Acciones</th>
@@ -155,22 +161,24 @@
 <script>
   const PAGE_SIZE = 10;
   let currentPage = 1;
-  let currentList = SOLICITUDES;
+  let currentList = [];
 
   function prioridadClass(p) {
     return { alta: 'chip-alta', media: 'chip-media', baja: 'chip-baja' }[p] || 'chip-media';
   }
-
   function iaClass(d) {
     return { 'APROBAR': 'chip-aprobar', 'RECHAZAR': 'chip-rechazar', 'REVISAR': 'chip-revisar' }[d] || 'chip-media';
+  }
+  function estadoClass(e) {
+    return { 'Pendiente': 'chip-pendiente', 'En revisión': 'chip-revision', 'En espera': 'chip-revisar' }[e] || '';
   }
 
   function renderTabla(lista, page) {
     const tbody = document.getElementById('tabla-body');
     tbody.innerHTML = '';
     const start = (page - 1) * PAGE_SIZE;
-    const slice = lista.slice(start, start + PAGE_SIZE);
-    slice.forEach(s => {
+    lista.slice(start, start + PAGE_SIZE).forEach(s => {
+      const estado = estadoSolicitud(s);
       const slaHtml = s.sla_vencido
         ? `<span class="chip chip-vencida" style="font-size:.7rem;padding:.1rem .45rem">SLA vencido</span>`
         : '';
@@ -187,11 +195,31 @@
           <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem">DNI ${s.renaper.dni}</div>
         </td>
         <td style="color:var(--muted);font-size:.83rem">${s.tiempo_cola}</td>
+        <td><span class="chip ${estadoClass(estado)}">${estado}</span></td>
         <td><span class="chip ${prioridadClass(s.prioridad)}">${s.prioridad.charAt(0).toUpperCase() + s.prioridad.slice(1)}</span></td>
         <td><span class="chip ${iaClass(s.ai_decision)}">${s.ai_decision}</span></td>
         <td><a href="detalle.html?id=${s.id}" class="btn-abrir">Abrir →</a></td>`;
       tbody.appendChild(row);
     });
+  }
+
+  function updateMiniKpis(lista) {
+    const vencidas   = lista.filter(s => s.sla_vencido).length;
+    const pendientes = lista.filter(s => estadoSolicitud(s) === 'Pendiente').length;
+    const revision   = lista.filter(s => estadoSolicitud(s) === 'En revisión').length;
+    document.getElementById('mkpi-total').textContent     = lista.length;
+    document.getElementById('mkpi-pendientes').textContent = pendientes;
+    document.getElementById('mkpi-revision').textContent  = revision;
+    document.getElementById('mkpi-vencidas').textContent  = vencidas;
+    // SLA banner
+    const banner = document.getElementById('sla-banner');
+    if (vencidas > 0) {
+      banner.style.display = '';
+      document.getElementById('sla-banner-text').innerHTML =
+        `<strong>${vencidas} solicitud${vencidas > 1 ? 'es' : ''} con SLA vencido</strong> — ${vencidas > 1 ? 'Estas filas requieren' : 'Esta fila requiere'} atención urgente.`;
+    } else {
+      banner.style.display = 'none';
+    }
   }
 
   function updatePagination(lista, page) {
@@ -200,12 +228,10 @@
     const end   = Math.min(page * PAGE_SIZE, lista.length);
     document.getElementById('pagination-info').innerHTML =
       `Página <strong>${page}</strong> de <strong>${totalPages}</strong> · mostrando <strong>${start}–${end}</strong> de <strong>${lista.length}</strong>`;
-    const btnPrev = document.getElementById('btn-prev');
-    const btnNext = document.getElementById('btn-next');
-    btnPrev.disabled = page <= 1;
-    btnPrev.style.opacity = page <= 1 ? '.4' : '';
-    btnNext.disabled = page >= totalPages;
-    btnNext.style.opacity = page >= totalPages ? '.4' : '';
+    document.getElementById('btn-prev').disabled = page <= 1;
+    document.getElementById('btn-prev').style.opacity = page <= 1 ? '.4' : '';
+    document.getElementById('btn-next').disabled = page >= totalPages;
+    document.getElementById('btn-next').style.opacity = page >= totalPages ? '.4' : '';
   }
 
   function goPage(page) {
@@ -215,11 +241,14 @@
     updatePagination(currentList, currentPage);
   }
 
-  // Filtrar por agente activo (guardado en localStorage)
+  // Cargar solicitudes del agente activo y actualizar todo
   const activeAgent = localStorage.getItem('activeAgent') || 'María Eugenia López';
   const solicitudesAgente = SOLICITUDES.filter(s => s.agente === activeAgent);
+  currentList = solicitudesAgente;
+  updateMiniKpis(solicitudesAgente);
+  goPage(1);
 
-  // Live search — reset to page 1 on each keystroke
+  // Búsqueda en vivo
   document.getElementById('q-search').addEventListener('input', function() {
     const q = this.value.toLowerCase();
     currentList = solicitudesAgente.filter(s =>
@@ -227,12 +256,9 @@
       s.renaper.nombre.toLowerCase().includes(q) ||
       s.renaper.dni.toLowerCase().includes(q)
     );
+    updateMiniKpis(currentList);
     goPage(1);
   });
-
-  // Initial render con las solicitudes del agente activo
-  currentList = solicitudesAgente;
-  goPage(1);
 </script>
 </body>
 </html>
