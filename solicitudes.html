@@ -213,7 +213,6 @@
     currentPage = Math.max(1, Math.min(page, totalPages));
     renderTabla(currentList, currentPage);
     updatePagination(currentList, currentPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Live search — reset to page 1 on each keystroke
