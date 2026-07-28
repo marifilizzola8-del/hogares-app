@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>+Hogares — Solicitudes</title>
+<link rel="stylesheet" href="shared.css">
+<script src="mock-data.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+      </div>
+      <span class="brand-name"><em>+</em>Hogares</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Dashboard</a>
+      <a href="solicitudes.html" class="nav-link active">Solicitudes</a>
+    </div>
+    <div class="nav-actions">
+      <div class="notif-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-badge"></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- CONTEXT BAR -->
+<div class="context-bar">
+  <div class="context-bar-inner">
+    <div class="context-bar-left">
+      <div class="bc-step">
+        <svg class="bc-step-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <a href="index.html">Dashboard</a>
+      </div>
+      <span class="bc-sep">›</span>
+      <span class="bc-current">Solicitudes por revisar</span>
+      <span class="bc-sep">·</span>
+      <span style="font-size:.78rem;color:var(--muted)">450 pendientes</span>
+    </div>
+    <div class="context-bar-right">
+      <span class="bc-status bc-status-vencida">3 vencidas</span>
+    </div>
+  </div>
+</div>
+
+<main class="main" style="padding-top:1.75rem">
+  <div class="main-inner">
+
+    <!-- BREADCRUMB + MINI KPIs -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="breadcrumb">
+          <a href="index.html" class="bc-link">Dashboard</a>
+          <span class="bc-sep">›</span>
+          <span class="bc-current">Solicitudes</span>
+        </div>
+        <h1 class="page-title">Solicitudes por revisar</h1>
+        <p class="page-desc">Filtrá, ordená y priorizá la cola operativa del agente humano.</p>
+      </div>
+      <!-- Mini KPIs contextuales -->
+      <div class="mini-kpis">
+        <div class="mini-kpi">
+          <span class="mini-kpi-label">Pendientes</span>
+          <span class="mini-kpi-val" style="color:#1f5870">450</span>
+        </div>
+        <div class="mini-kpi-divider"></div>
+        <div class="mini-kpi">
+          <span class="mini-kpi-label">Vencidas</span>
+          <span class="mini-kpi-val" style="color:#b91c1c">3</span>
+        </div>
+        <div class="mini-kpi-divider"></div>
+        <div class="mini-kpi">
+          <span class="mini-kpi-label">Página actual</span>
+          <span class="mini-kpi-val" style="color:#1f5870">1 / 45</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLA BANNER -->
+    <div class="sla-banner" style="margin-bottom:1rem">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span><strong>3 solicitudes con SLA vencido</strong> — Las primeras 3 filas requieren atención urgente.</span>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="queue-toolbar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="search" placeholder="Buscar por cliente, DNI, solicitud o ciudad" id="q-search">
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar CSV
+        </button>
+        <button class="btn-ghost">Aplicar filtros</button>
+        <button class="btn-ghost">Limpiar</button>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters-grid">
+      <div class="filter-field"><span class="filter-label">Estado</span><select><option>Pendiente</option><option>En revisión</option><option>En espera</option><option>Aprobada</option><option>Rechazada</option></select></div>
+      <div class="filter-field"><span class="filter-label">Prioridad</span><select><option>Todas</option><option>Alta</option><option>Media</option><option>Baja</option></select></div>
+      <div class="filter-field"><span class="filter-label">Decisión IA</span><select><option>Todas</option><option>APROBAR</option><option>REVISAR</option><option>RECHAZAR</option></select></div>
+      <div class="filter-field"><span class="filter-label">Score mínimo</span><input type="number" placeholder="Ej. 700"></div>
+      <div class="filter-field"><span class="filter-label">Score máximo</span><input type="number" placeholder="Ej. 950"></div>
+      <div class="filter-field"><span class="filter-label">Orden</span><select><option>Fecha creación</option><option>Prioridad</option><option>Score BCRA</option><option>Antigüedad</option></select></div>
+      <div class="filter-field"><span class="filter-label">Dirección</span><select><option>Ascendente</option><option>Descendente</option></select></div>
+    </div>
+
+    <!-- TABLE — generada desde mock-data.js -->
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="sorted">Solicitud ↑</th>
+              <th>Cliente</th>
+              <th>Tiempo en cola</th>
+              <th>Prioridad</th>
+              <th>Sugerencia IA</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body">
+            <!-- Renderizado por JS -->
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span class="pagination-info">Página <strong>1</strong> de 45 · <strong>450 solicitudes</strong></span>
+        <div class="pagination-actions">
+          <button class="btn-ghost" disabled style="opacity:.4">← Anterior</button>
+          <button class="btn-ghost">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-brand">+Hogares</span>
+    <span class="footer-legal">Banco de la Nación Argentina © 2026 — Sistema de Asistencia a la Evaluación Crediticia</span>
+  </div>
+</footer>
+
+<script>
+  // Priority badge class mapping
+  function prioridadClass(p) {
+    return { alta: 'chip-alta', media: 'chip-media', baja: 'chip-baja' }[p] || 'chip-media';
+  }
+
+  // AI decision chip class
+  function iaClass(d) {
+    return { 'APROBAR': 'chip-aprobar', 'RECHAZAR': 'chip-rechazar', 'REVISAR': 'chip-revisar' }[d] || 'chip-media';
+  }
+
+  function renderTabla(lista) {
+    const tbody = document.getElementById('tabla-body');
+    tbody.innerHTML = '';
+    lista.forEach((s, i) => {
+      const slaHtml = s.sla_vencido
+        ? `<span class="chip chip-vencida" style="font-size:.7rem;padding:.1rem .45rem">SLA vencido</span>`
+        : '';
+      const row = document.createElement('tr');
+      if (s.sla_vencido) row.classList.add('row-sla');
+      row.innerHTML = `
+        <td>
+          <strong>${s.id}</strong>
+          <div style="font-size:.73rem;color:var(--muted);margin-top:.15rem">${s.fecha_creacion}</div>
+          ${slaHtml}
+        </td>
+        <td>
+          <strong>${s.renaper.nombre}</strong>
+          <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem">DNI ${s.renaper.dni}</div>
+        </td>
+        <td style="color:var(--muted);font-size:.83rem">${s.tiempo_cola}</td>
+        <td><span class="chip ${prioridadClass(s.prioridad)}">${s.prioridad.charAt(0).toUpperCase() + s.prioridad.slice(1)}</span></td>
+        <td><span class="chip ${iaClass(s.ai_decision)}">${s.ai_decision}</span></td>
+        <td>
+          <a href="detalle.html?id=${s.id}" class="btn-abrir">Abrir →</a>
+        </td>`;
+      tbody.appendChild(row);
+    });
+  }
+
+  // Live search filter
+  document.getElementById('q-search').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    const filtered = SOLICITUDES.filter(s =>
+      s.id.toLowerCase().includes(q) ||
+      s.renaper.nombre.toLowerCase().includes(q) ||
+      s.renaper.dni.toLowerCase().includes(q)
+    );
+    renderTabla(filtered);
+  });
+
+  // Initial render
+  renderTabla(SOLICITUDES);
+</script>
+</body>
+</html>
